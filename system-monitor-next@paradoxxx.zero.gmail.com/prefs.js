@@ -39,7 +39,7 @@ function color_to_hex(color) {
 const SMGeneralPrefsPage = GObject.registerClass({
     GTypeName: 'SMGeneralPrefsPage',
     Template: import.meta.url.replace('prefs.js', 'ui/prefsGeneralSettings.ui'),
-    InternalChildren: ['background', 'icon_display', 'show_tooltip', 'move_clock',
+    InternalChildren: ['background', 'label_color', 'icon_display', 'show_tooltip', 'move_clock',
         'compact_display', 'center_display', 'left_display', 'rotate_labels',
         'tooltip_delay_ms', 'graph_delay_m', 'custom_monitor_switch', 'custom_monitor_command'],
 }, class SMGeneralPrefsPage extends Adw.PreferencesPage {
@@ -64,6 +64,24 @@ const SMGeneralPrefsPage = GObject.registerClass({
         this._settings.connect('changed::background', () => {
             color.parse(this._settings.get_string('background'));
             this._background.set_rgba(color);
+        });
+
+        let labelColor = new Gdk.RGBA();
+        labelColor.parse(this._settings.get_string('label-color'));
+        this._label_color.set_rgba(labelColor);
+
+        let labelColorDialog = new Gtk.ColorDialog({
+            modal: true,
+            with_alpha: true,
+        });
+        this._label_color.set_dialog(labelColorDialog);
+
+        this._label_color.connect('notify::rgba', colorButton => {
+            this._settings.set_string('label-color', color_to_hex(colorButton.get_rgba()));
+        });
+        this._settings.connect('changed::label-color', () => {
+            labelColor.parse(this._settings.get_string('label-color'));
+            this._label_color.set_rgba(labelColor);
         });
 
         this._settings.bind('icon-display', this._icon_display,
