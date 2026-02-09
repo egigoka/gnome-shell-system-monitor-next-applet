@@ -973,6 +973,16 @@ const ElementBase = class SystemMonitor_ElementBase extends TipBox {
 
         this.label = new St.Label({text: _(this.elt_short || this.elt),
             style_class: Style.get('sm-status-label')});
+        const apply_label_color = () => {
+            let color = Schema.get_string('label-color');
+            // Convert #RRGGBBAA to #RRGGBB (strip alpha) for CSS compatibility
+            if (color.length === 9) {
+                color = color.substring(0, 7);
+            }
+            this.label.set_style('color: ' + color);
+        };
+        apply_label_color();
+        Schema.connect('changed::label-color', apply_label_color);
         change_text.call(this);
         Schema.connect('changed::' + this.elt + '-show-text', change_text.bind(this));
 
