@@ -451,6 +451,11 @@
       <default>'#ffffff16'</default>
       <summary>Color of background</summary>
     </key>
+    <key name="label-color" type="s">
+      <default>'#bbbbbb'</default>
+      <summary>Color of label text</summary>
+      <description>Color for all labels (cpu, mem, swap, etc.) in the status bar</description>
+    </key>
     <key name="battery-display" type="b">
       <default>false</default>
       <summary>Display battery</summary>
